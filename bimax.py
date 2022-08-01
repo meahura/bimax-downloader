@@ -3,9 +3,9 @@ from sys import argv
 from tqdm import tqdm
 from platform import system ; import socket
 import os
+from notifypy import Notify
 
 # Request permission
-
 
 # platfrom -> install tor
 list_dir_home = os.listdir()
@@ -43,6 +43,15 @@ if (str(argvS) =="[]"):
       if NumberS == 1:
          url = str(input('enter link : '))
          name = url.split('/')[-1]
+
+
+         notfiy = Notify()
+         notfiy.message = f"Downloading please wait..."
+         notfiy.title = name
+         notfiy.icon = "direct-download.png"
+         notfiy.send()
+
+
          respons = requests.get(url,stream=True)
          heead = int(respons.headers['Content-Length'])
          with open(name,'wb') as file:
