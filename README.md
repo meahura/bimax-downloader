@@ -42,4 +42,4 @@ But there's another way to download
       python3 bimax.py
 
 photo Description
-<img src="file.jpg">
+<img src="./file.jpg">
