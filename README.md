@@ -30,3 +30,16 @@ AND,
 
 We tried to use Python's internal libraries so that you don't need to install a library from external sources (:
 
+# Execution and commands required
+
+After installing the required items, we need to enter the folder and follow the steps below
+And write the orders in the command line.
+
+      cd bimax-linux && python3 bimax.py [url]
+
+But there's another way to download
+
+      python3 bimax.py
+
+photo Description
+<img src="bimax-linux/Untitled.png">
