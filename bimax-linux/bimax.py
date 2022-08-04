@@ -1,25 +1,9 @@
 import requests
 from sys import argv
 from tqdm import tqdm
-from platform import system ; import socket
+import socket
 import os
 from notifypy import Notify
-
-# Request permission
-
-# platfrom -> install tor
-list_dir_home = os.listdir()
-if "safarey.session" not in list_dir_home :
-   if system() == "Linux":
-      print("We need to download the tools needed for this tool, we need your access 👇🏻")
-      os.system("sudo apt-get install tor")
-      os.system("tor")
-      os.system("pip install -r requirement.txt")
-      os.system("clear")
-      with open("safarey.session" , mode='w') as files:
-         files.write(str(requests.get("https://github.com").status_code))
-else:
-   pass
 
 # argv to range 1:1000 and --> string
 # download argv input and example --> bimax [link download]
@@ -27,6 +11,7 @@ else:
 argvS = argv[1:700]
 
 if (str(argvS) =="[]"):
+   os.system("clear")
    print(r"""
    .______    __  .___  ___.      ___      ___   ___
    |   _  \  |  | |   \/   |     /   \     \  \ /  /

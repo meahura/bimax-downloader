@@ -1,0 +1,209 @@
+Metadata-Version: 1.0
+Name: notifypy
+Version: 1.0.3.0
+Summary: # Package Name was taken already so please use notifypy
+# PyNoti
+## PyNoti is Decorator used to send notification on exception
+Gmail service is used to send notification to mail.
+Make Sure you have turn on "Less Secure App" if not then you can turn on from this link:
+https://myaccount.google.com/u/0/lesssecureapps
+
+# How to install
+its simple just git clone or download then open terminal in directory and type:
+
+```python3 setup.py install --user```
+
+# How to use
+Here is example how to use it, first import the PyNoti from <b>decorator</b> Module.
+
+```from pynoti.decorator import PyNoti```
+
+Here Define it above your function just like this:
+
+```
+@PyNoti('xxx@gmail.com', 'gmailpass', 'ammadkhalid12@gmail.com')
+def test(message = 'test'):
+    message / 10
+
+test()
+```
+
+<img src="https://i.imgur.com/qK55INQ.png"></img>
+
+Now you will receive an email in cause of exception who look like this:
+
+notification title:
+<img src='https://i.imgur.com/AQLUQNd.png' title='notification title'></img>
+notification body:
+<img src='https://i.imgur.com/e1VUBeZ.png' title='notification message body'></img>
+
+let's take a look at its Parameters:
+
+```
+Parameters
+    ----------
+    gEmail : str
+        gmail email address which is refer as `gEmail`. [required]
+    gPasswd : str
+        gmail email address password which is refer as `gPasswd`. [required]
+    to : str
+        `to` Email Address where notification will send. [required]
+    retryOn : tuple or type
+        `retryOn` is tuple list of Exception to retry on.
+    ignore : type or tuple
+        `ignore` ignore Exceptions any list is given.
+    title : str
+        `title` which will be used as title to send notification. You can also modify it
+        but make sure you have give the {func} which is name of function.
+    message : str
+        `message` who will used as message with exception in notification body. just like title you can modify it
+        make sure you will give {errorMsg} is Exception.
+    logger : instance
+        `logger` is instance to log error if any occur.
+    delay : int
+        `delay` is delay internal in seconds on each retry. [required] if retryOn param is used [default is 3]
+    maxRetires : int
+        `maxRetires` is maximum number of retries if param retryOn is used. [default is 1000]
+
+    Returns
+    -------
+    type
+```
+
+In our first example the first parameter which was 'xxx@gmail.com' is email address who will use as sender to notification
+and second was it's password and the third one was 'to' which means the person who will receive notifications
+you can also put multiple email Addresses by seprating them with comma like this:
+
+
+```
+'person@example.com,person2@example.com'
+```
+
+here is second example with <b>retryOn, delay</b> and <b>maxRetires</b> parameters:
+
+```
+@PyNoti('xxx@gmail.com', 'gmailpass', 'ammadkhalid12@gmail.com',
+retryOn = (TypeError),
+maxRetires = 2,
+delay = 1,
+)
+def test(message = 'test'):
+    message / 10
+
+test()
+```
+
+<img src="https://i.imgur.com/fgbH97S.png"></img>
+
+this time you will get to see something like this:
+
+notification title:
+<img src="https://i.imgur.com/riA2Lqf.png"></img>
+notification body:
+<img src="https://i.imgur.com/7KDrcNJ.png"></img>
+
+when we set the retryOn Parameters with List of Exceptions in tuple then it will try retry and keep trying til
+its reach the max retries Limit and when it will reach then it will send notification.
+
+Its same thing with ignore parameter but it will not send any notification and the other parameters are not used.
+its just used to ignore the exceptions given to it
+
+here is example
+
+```
+@PyNoti('xxx@gmail.com', 'gmailpass', 'ammadkhalid12@gmail.com',
+ignore = (TypeError),
+)
+def test(message = 'test'):
+    message / 10
+
+test()
+```
+
+give it a try and run and it will ignore the exceptions.
+
+if you want to log the exception who will help us so much in debugging process
+you can pass the logger instance as paramter logger to decorator
+just like this:
+
+```
+from pynoti.decorator import PyNoti
+from logger import Logger
+
+log = Logger()
+logger = log.create("test", 'test.log')
+
+@PyNoti('xxx@gmail.com', 'gmailpass', 'ammadkhalid12@gmail.com',
+maxRetires = (TypeError),
+logger = logger
+)
+def test(message = 'test'):
+    message / 10
+
+test()
+```
+
+logger.py
+
+
+```
+import logging
+import os
+
+class Logger:
+
+    def __init__(self):
+        self.formatter = 'At [%(asctime)s.%(msecs)03d] : [Level: %(levelname)s] : [%(filename)s:%(lineno)s%(funcName)20s()] : \n=======\n%(message)s\n======='
+        self.dateFormate = "%Y-%m-%d %I:%m:%S %p"
+        self.eFormatter = 'At [%(asctime)s.%(msecs)03d] : [Level: %(levelname)s] : [%(filename)s:%(lineno)s %(funcName)20s() ]\n=======Error Exception======='
+
+    def create(self, name, filename, level=logging.DEBUG):
+        if os.path.exists(filename):
+            handler = logging.FileHandler(filename, "a")
+        else:
+            handler = logging.FileHandler(filename)
+
+        # if programmer wants :D :p error level exception
+        if name == 'bug' or name == 'bugs' or name == 'exception' or name == 'debug':
+            formater = logging.Formatter(self.eFormatter, self.dateFormate)
+        else:
+            formater = logging.Formatter(self.formatter, self.dateFormate)
+        handler.setFormatter(formater)
+
+        # console logging
+        console = logging.StreamHandler()
+        # Set Level
+        console.setLevel(logging.INFO)
+        # add formatter
+        console.setFormatter(formater)
+
+        logger = logging.getLogger(name)
+
+        # add console logger
+        # logger.addHandler(console)
+        # add file logger
+        logger.addHandler(handler)
+
+
+        logger.setLevel(level)
+
+        return logger
+```
+
+try to run and it will log the exception and you will get to see the log file
+
+like this:
+<img src="https://i.imgur.com/8d1Kovu.png"></img>
+
+I hope i don't need to explain about the error logging. You can use your custom logger like i do in mine.
+
+So that's all :) i hope you will like it.
+
+Home-page: https://github.com/Ammadkhalid/notifypy
+Author: Ammad Khalid
+Author-email: ammadkhalid12@gmail.com
+License: UNKNOWN
+Description-Content-Type: UNKNOWN
+Description: UNKNOWN
+Keywords: notification email gmail exception error
+Platform: UNKNOWN
